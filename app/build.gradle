@@ -16,17 +16,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        def flickrApiKey = properties.getProperty("flickr_api_key", "")
-
         debug {
-            buildConfigField 'String', "FLICKR_API_KEY", flickrApiKey
-            resValue 'string', "api_key", flickrApiKey
+            buildConfigField 'String', "FLICKR_API_KEY", flickr_api_key
         }
         release {
-            buildConfigField 'String', "FLICKR_API_KEY", flickrApiKey
-            resValue 'string', "api_key", flickrApiKey
+            buildConfigField 'String', "FLICKR_API_KEY", flickr_api_key
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
