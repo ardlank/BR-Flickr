@@ -1,4 +1,4 @@
-package com.example.br_flickr.Source.Remote
+package com.example.br_flickr.source.remote
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -6,6 +6,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+//Create a common Retrofit object
 object RetrofitFactory {
 
     private val authInterceptor = Interceptor {chain->

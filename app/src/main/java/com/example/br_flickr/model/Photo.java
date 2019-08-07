@@ -1,4 +1,4 @@
-package com.example.br_flickr.Model;
+package com.example.br_flickr.model;
 
 public class Photo {
     private String id;
@@ -14,6 +14,7 @@ public class Photo {
     private String url_z;
     private String url_c;
     private String url_l;
+    private String url_o;
 
     public String getId() {
         return id;
@@ -117,5 +118,27 @@ public class Photo {
 
     public void setUrl_l(String url_l) {
         this.url_l = url_l;
+    }
+
+    public String getUrl_o() {
+        return url_o;
+    }
+
+    public void setUrl_o(String url_o) {
+        this.url_o = url_o;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof Photo)) {
+            return false;
+        }
+
+        Photo photo = (Photo) o;
+        return photo.id.equals(id) && photo.title.equals(title);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.br_flickr.Model;
+package com.example.br_flickr.model;
 
 import java.util.List;
 

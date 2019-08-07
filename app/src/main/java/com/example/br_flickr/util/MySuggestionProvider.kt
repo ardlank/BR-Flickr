@@ -1,7 +1,8 @@
-package com.example.br_flickr.Util
+package com.example.br_flickr.util
 
 import android.content.SearchRecentSuggestionsProvider
 
+//Set up SearchRecentSuggestionsProvider for recent queries
 class MySuggestionProvider : SearchRecentSuggestionsProvider() {
     init {
         setupSuggestions(
