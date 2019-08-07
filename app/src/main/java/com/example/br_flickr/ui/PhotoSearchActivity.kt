@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.view.Menu
-import android.widget.SearchView
+import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
@@ -27,6 +28,8 @@ class PhotoSearchActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
 
+    private lateinit var menuItem: MenuItem
+
     val defaultSearch = "people"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +40,6 @@ class PhotoSearchActivity : AppCompatActivity() {
 
         initAdapter()
         initSwipeToRefresh()
-
-        viewModel.showSearch(defaultSearch)
     }
 
     private fun initAdapter() {
@@ -75,20 +76,23 @@ class PhotoSearchActivity : AppCompatActivity() {
 
         // Get the SearchView and set the searchable configuration
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        (menu.findItem(R.id.search).actionView as SearchView).apply {
+        menuItem = menu.findItem(R.id.search)
+        (menuItem.actionView as SearchView).apply {
             // Assumes current activity is the searchable activity
             setSearchableInfo(
                 searchManager.getSearchableInfo(componentName)
             )
-            isIconifiedByDefault = false // Do not iconify the widget; expand it by default
+            setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
         }
+        fetchSearch(defaultSearch)
         return true
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (Intent.ACTION_SEARCH == intent!!.action) {
-            intent.getStringExtra(SearchManager.QUERY)?.also { query ->
+            intent.getStringExtra(SearchManager.QUERY)?.also { input ->
+                val query = input.trim()
                 fetchSearch(query)
                 SearchRecentSuggestions(this, MySuggestionProvider.AUTHORITY, MySuggestionProvider.MODE)
                     .saveRecentQuery(query, null)
@@ -96,8 +100,9 @@ class PhotoSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun fetchSearch(input: String) {
-        val query = input.trim()
+    private fun fetchSearch(query: String) {
+        supportActionBar?.title = query
+        menuItem.collapseActionView()
         if (query.isNotEmpty()) {
             if (viewModel.showSearch(query)) {
                 recyclerView.scrollToPosition(0)
