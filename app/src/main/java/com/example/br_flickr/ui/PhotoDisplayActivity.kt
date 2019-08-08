@@ -22,7 +22,7 @@ class PhotoDisplayActivity: AppCompatActivity() {
             Glide
                 .with(this)
                 .load(photoUrl)
-                .centerCrop()
+                .centerInside()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView)
         }

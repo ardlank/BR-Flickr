@@ -37,8 +37,8 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests):
         this.photo = photo
         title.text = photo?.title ?: "loading"
         glide
-            .load(photo?.url_q)
-            .centerCrop()
+            .load(photo?.url_n)
+            .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(photoImage)
     }
