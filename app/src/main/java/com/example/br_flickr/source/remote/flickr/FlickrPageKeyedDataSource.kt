@@ -3,7 +3,7 @@ package com.example.br_flickr.source.remote.flickr
 import com.example.br_flickr.model.Photo
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.example.br_flickr.source.remote.ApiConstants
+import com.example.br_flickr.source.SourceConstants
 import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.NetworkState.Companion.LOADED
 import kotlinx.coroutines.GlobalScope
@@ -87,7 +87,7 @@ class FlickrPageKeyedDataSource(
                     retry = null
                     initialLoad.postValue(LOADED)
                     networkState.postValue(LOADED)
-                    callback.onResult(photos, ApiConstants.FLICKR_INITIAL_PAGE_NUMBER, ApiConstants.FLICKR_INITIAL_PAGE_NUMBER+1)
+                    callback.onResult(photos, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER+1)
                 } else {
                     retry = {
                         loadInitial(params, callback)

@@ -1,5 +1,6 @@
 package com.example.br_flickr.source.remote
 
+import com.example.br_flickr.source.SourceConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +13,7 @@ object RetrofitFactory {
     private val authInterceptor = Interceptor {chain->
         val newUrl = chain.request().url()
             .newBuilder()
-            .addQueryParameter("api_key", ApiConstants.FLICKR_AP_KEY)
+            .addQueryParameter("api_key", SourceConstants.FLICKR_API_KEY)
             .addQueryParameter("nojsoncallback", "1")
             .addQueryParameter("format", "json")
             .build()

@@ -5,4 +5,4 @@ import com.bumptech.glide.module.AppGlideModule
 
 //GlideModule for easy Glide calls
 @GlideModule
-class FlickrAppGlideModule : AppGlideModule()
+class AppGlideModule : AppGlideModule()

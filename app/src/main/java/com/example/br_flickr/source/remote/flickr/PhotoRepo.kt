@@ -5,20 +5,22 @@ import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import com.example.br_flickr.model.Photo
 import androidx.paging.PagedList
-import com.example.br_flickr.source.remote.ApiConstants
-import com.example.br_flickr.source.remote.Posts
+import com.example.br_flickr.source.SourceConstants
+import com.example.br_flickr.source.Posts
+import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.remote.FlickrPostSource
 
 //Returns a posts class that loads data directly from API. Uses Paging
-class PhotoRepo {
+class PhotoRepo(private val flickrDB: FlickrDB) : FlickrPostSource {
 
     @MainThread
-    fun postsOfPhoto(searchQuery: String) : Posts<Photo> {
+    override fun postsOfPhoto(searchQuery: String) : Posts<Photo> {
         val sourceFactory = FlickrDataSourceFactory(searchQuery)
 
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
-            .setPageSize(ApiConstants.FLICKR_PAGE_SIZE)
-            .setInitialLoadSizeHint(ApiConstants.FLICKR_PAGE_SIZE * 2)
+            .setPageSize(SourceConstants.FLICKR_PAGE_SIZE)
+            .setInitialLoadSizeHint(SourceConstants.FLICKR_PAGE_SIZE * 2)
             .build()
 
         val livePagedList = LivePagedListBuilder(sourceFactory, pagedListConfig)

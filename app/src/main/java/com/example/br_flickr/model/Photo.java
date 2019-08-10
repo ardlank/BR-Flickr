@@ -1,6 +1,15 @@
 package com.example.br_flickr.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName="photos", indices = {@Index(value = {"id"},
+        unique = true)})
 public class Photo {
+    @NonNull
+    @PrimaryKey
     private String id;
     private String owner;
     private String secret;
@@ -15,6 +24,8 @@ public class Photo {
     private String url_c;
     private String url_l;
     private String url_o;
+    private int indexInResponse;
+    private boolean isBookmarked = false;
 
     public String getId() {
         return id;
@@ -126,6 +137,22 @@ public class Photo {
 
     public void setUrl_o(String url_o) {
         this.url_o = url_o;
+    }
+
+    public Integer getIndexInResponse() {
+        return indexInResponse;
+    }
+
+    public void setIndexInResponse(Integer indexInResponse) {
+        this.indexInResponse = indexInResponse;
+    }
+
+    public Boolean getIsBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setIsBookmarked(Boolean isBookmarked) {
+        this.isBookmarked = isBookmarked;
     }
 
     @Override

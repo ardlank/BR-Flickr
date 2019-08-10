@@ -33,6 +33,8 @@ dependencies {
     def coroutine_version = "1.2.2"
     def glide_version= "4.9.0"
     def lifecycle_version = "2.1.0-rc01"
+    def room_version = "2.1.0-rc01"
+    def dagger_version = "2.23.2"
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -44,6 +46,12 @@ dependencies {
     //Okhttp3
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-testing:$room_version"
 
     //Kotlin Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
@@ -61,6 +69,12 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$lifecycle_version"
     kapt "android.arch.lifecycle:compiler:$lifecycle_version"
 
+    //dagger
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    compileOnly "javax.annotation:jsr250-api:1.0"
+
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
@@ -68,6 +82,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
 
     testImplementation 'junit:junit:4.12'
