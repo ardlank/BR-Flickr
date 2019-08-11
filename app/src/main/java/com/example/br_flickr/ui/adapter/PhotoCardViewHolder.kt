@@ -1,11 +1,10 @@
 package com.example.br_flickr.ui.adapter
 
 import android.content.Intent
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,6 @@ import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDB
 import com.example.br_flickr.ui.PhotoDisplayActivity
 import com.example.br_flickr.util.GlideRequests
-import kotlinx.android.synthetic.main.photo_card.view.*
 
 //RecyclerView ViewHolder for a Photo Card
 class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDB: FlickrDB):
@@ -23,18 +21,16 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
 
     private val photoImage = itemView.findViewById<ImageView>(R.id.photoImage)
     private val title = itemView.findViewById<TextView>(R.id.title)
-    private val bookmark = itemView.findViewById<Button>(R.id.bookmark)
+    private val bookmark = itemView.findViewById<ImageButton>(R.id.bookmark)
     private var photo : Photo? = null
 
     init {
         view.setOnClickListener {
-            photo?.id.let { id ->
-                val intent = Intent(view.context, PhotoDisplayActivity::class.java).apply {
-                    putExtra("photoUrl", photo?.url_m)
-                    putExtra("photoTitle", photo?.title)
-                }
-                view.context.startActivity(intent)
+            val intent = Intent(view.context, PhotoDisplayActivity::class.java).apply {
+                putExtra("photoUrl", photo?.url_m)
+                putExtra("photoTitle", photo?.title)
             }
+            view.context.startActivity(intent)
         }
         bookmark.setOnClickListener {
             if(photo?.isBookmarked == true) {
@@ -50,13 +46,17 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     }
 
     private fun setBookmarkView(){
-        if(photo?.isBookmarked == true) bookmark.setBackgroundColor(Color.RED)
-        else bookmark.setBackgroundColor(Color.BLUE)
+        if(photo?.isBookmarked == true) bookmark.setImageResource(R.drawable.ic_bookmark_filled)
+        else bookmark.setImageResource(R.drawable.ic_bookmark)
+    }
+
+    fun isBookmarked(photo: Photo?) : Boolean {
+        val bookmarkedPhoto = flickrDB.posts().findId(photo?.id)
+        return bookmarkedPhoto != null
     }
 
     fun bind(photo: Photo?) {
-        if(flickrDB.posts().findId(photo?.id) != null) photo?.isBookmarked = true
-        else photo?.isBookmarked = false
+        photo?.isBookmarked = isBookmarked(photo)
 
         this.photo = photo
         title.text = photo?.title ?: "loading"

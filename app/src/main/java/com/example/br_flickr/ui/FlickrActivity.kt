@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.br_flickr.R
 import com.example.br_flickr.model.Photo
-import com.example.br_flickr.source.Posts
 import com.example.br_flickr.source.local.FlickrDB
 import com.example.br_flickr.ui.adapter.PhotoListAdapter
 import com.example.br_flickr.util.GlideApp
@@ -25,8 +23,6 @@ import com.example.br_flickr.util.MySuggestionProvider
 import com.example.br_flickr.util.NetworkState
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.flickr_main.*
-import com.google.gson.Gson
-
 
 
 class FlickrActivity : AppCompatActivity() {
@@ -44,14 +40,14 @@ class FlickrActivity : AppCompatActivity() {
     private val OnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-                clearClear()
+                clearScreen()
                 viewModel.setRepo(isNetwork = true)
                 menuItem.isVisible = true
                 fetchSearch(viewModel.currentSearch()!!)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_bookmark -> {
-                clearClear()
+                clearScreen()
                 viewModel.setRepo(isNetwork = false)
                 menuItem.isVisible = false
                 setTitle("Bookmarks")
@@ -61,9 +57,9 @@ class FlickrActivity : AppCompatActivity() {
         false
     }
 
-    private fun clearClear() {
-        recyclerView.scrollToPosition(0)
+    private fun clearScreen() {
         (recyclerView.adapter as? PhotoListAdapter)?.submitList(null)
+        recyclerView.scrollToPosition(0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,8 +77,7 @@ class FlickrActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = PhotoListAdapter(glide, flickrDB)
-        {
+        val adapter = PhotoListAdapter(glide, flickrDB) {
             viewModel.retry()
         }
         recyclerView = findViewById(R.id.recyclerView)

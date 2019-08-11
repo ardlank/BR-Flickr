@@ -8,7 +8,7 @@ import com.example.br_flickr.model.Photo
 
 //Database schema used by the PhotoRepoDB
 @Database(
-    entities = arrayOf(Photo::class),
+    entities = [Photo::class],
     version = 1,
     exportSchema = false
 )
