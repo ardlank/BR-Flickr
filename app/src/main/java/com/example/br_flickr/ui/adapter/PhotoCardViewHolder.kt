@@ -1,14 +1,20 @@
 package com.example.br_flickr.ui.adapter
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDB
@@ -19,9 +25,10 @@ import com.example.br_flickr.util.GlideRequests
 class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDB: FlickrDB):
     RecyclerView.ViewHolder(view) {
 
-    private val photoImage = itemView.findViewById<ImageView>(R.id.photoImage)
-    private val title = itemView.findViewById<TextView>(R.id.title)
-    private val bookmark = itemView.findViewById<ImageButton>(R.id.bookmark)
+    private val photoImage = view.findViewById<ImageView>(R.id.photoImage)
+    private val title = view.findViewById<TextView>(R.id.title)
+    private val bookmark = view.findViewById<ImageButton>(R.id.bookmark)
+    private val progressbar = view.findViewById<ProgressBar>(R.id.spinner)
     private var photo : Photo? = null
 
     init {
@@ -63,8 +70,22 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         setBookmarkView()
         glide
             .load(photo?.url_n)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
+                                          isFirstResource: Boolean): Boolean {
+                    onFinished()
+                    photo?.title = e?.message
+                    return false
+                }
+
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                                             dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    onFinished()
+                    return false
+                }
+            })
             .centerInside()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(photoImage)
     }
 
@@ -79,6 +100,12 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     fun updatePhoto(item: Photo?) {
         photo = item
         photo?.title = item?.title
+    }
+
+    private fun onFinished() {
+        if (progressbar != null) {
+            progressbar.visibility = View.GONE
+        }
     }
 
 }

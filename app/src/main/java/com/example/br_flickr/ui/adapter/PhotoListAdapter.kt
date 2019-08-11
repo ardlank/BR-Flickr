@@ -22,7 +22,7 @@ class PhotoListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             R.layout.photo_card -> (holder as PhotoCardViewHolder).bind(getItem(position))
-            R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(networkState)
+            R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bind(networkState)
         }
     }
 
