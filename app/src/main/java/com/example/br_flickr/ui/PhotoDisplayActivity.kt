@@ -34,9 +34,13 @@ class PhotoDisplayActivity: AppCompatActivity() {
         if(intent != null) {
             val photoTitle = intent.extras?.get("photoTitle")
             val photoUrl = intent.extras?.get("photoUrl")
-            if(photoTitle is String) supportActionBar?.title = photoTitle
+            if(photoTitle is String) setImageTitle(photoTitle)
             if(photoUrl is String) setImage(photoUrl)
         }
+    }
+
+    fun setImageTitle(title: String) {
+        supportActionBar?.title = title
     }
 
     fun setImage(photoUrl: String?) {
