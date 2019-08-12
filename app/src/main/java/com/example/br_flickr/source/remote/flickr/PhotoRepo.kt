@@ -15,7 +15,7 @@ class PhotoRepo(private val flickrDB: FlickrDB) : FlickrPostSource {
 
     @MainThread
     override fun postsOfPhoto(searchQuery: String) : Posts<Photo> {
-        val sourceFactory = FlickrDataSourceFactory(searchQuery)
+        val sourceFactory = FlickrDataSourceFactory(searchQuery, flickrDB)
 
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
@@ -30,11 +30,12 @@ class PhotoRepo(private val flickrDB: FlickrDB) : FlickrPostSource {
         val refreshState = Transformations.switchMap(sourceFactory.sourceLiveData) {
             it.initialLoad
         }
+        val networkState = Transformations.switchMap(sourceFactory.sourceLiveData) {
+            it.networkState
+        }
         return Posts(
             pagedList = livePagedList,
-            networkState = Transformations.switchMap(sourceFactory.sourceLiveData) {
-                it.networkState
-            },
+            networkState = networkState,
             retry = {
                 sourceFactory.sourceLiveData.value?.retryAllFailed()
             },

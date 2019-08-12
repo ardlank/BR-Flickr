@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 //Create a common Retrofit object
 object RetrofitFactory {
 
-    private val authInterceptor = Interceptor {chain->
+    private val interceptors = Interceptor {chain->
         val newUrl = chain.request().url()
             .newBuilder()
             .addQueryParameter("api_key", SourceConstants.FLICKR_API_KEY)
@@ -31,9 +31,9 @@ object RetrofitFactory {
     }
 
     private val client = OkHttpClient().newBuilder()
-                .addInterceptor(authInterceptor)
-                .addInterceptor(loggingInterceptor)
-                .build()
+        .addInterceptor(interceptors)
+        .addInterceptor(loggingInterceptor)
+        .build()
 
 
     fun retrofit(baseUrl : String) : Retrofit = Retrofit.Builder()

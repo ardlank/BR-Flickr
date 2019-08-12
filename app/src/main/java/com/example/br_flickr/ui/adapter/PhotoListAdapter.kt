@@ -30,6 +30,7 @@ class PhotoListAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int,
         payloads: MutableList<Any>) {
+
         if (payloads.isNotEmpty()) {
             val item = getItem(position)
             (holder as PhotoCardViewHolder).updatePhoto(item)
@@ -86,10 +87,6 @@ class PhotoListAdapter(
 
             override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
                 oldItem.id == newItem.id
-
-            override fun getChangePayload(oldItem: Photo, newItem: Photo): Any? {
-                return null
-            }
         }
     }
 }

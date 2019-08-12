@@ -4,6 +4,7 @@ import com.example.br_flickr.model.Photo
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.br_flickr.source.SourceConstants
+import com.example.br_flickr.source.local.FlickrDB
 import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.NetworkState.Companion.LOADED
 import kotlinx.coroutines.GlobalScope
@@ -15,7 +16,9 @@ import java.io.IOException
 //A data source that uses the before/after keys returned in page requests. Before is not used
 class FlickrPageKeyedDataSource(
     private val flickrApi: FlickrApi,
-    private val searchQuery: String) : PageKeyedDataSource<Int, Photo>() {
+    private val searchQuery: String,
+    private val flickrDB: FlickrDB
+) : PageKeyedDataSource<Int, Photo>() {
 
     //incase of retry
     private var retry: (() -> Any)? = null
@@ -49,6 +52,11 @@ class FlickrPageKeyedDataSource(
                     val photos = photosResponse?.photos?.photo ?: emptyList()
                     retry = null
                     networkState.postValue(LOADED)
+                    for (photo in photos) {
+                        if (flickrDB.posts().findId(photo?.id) != null) {
+                            photo.isBookmarked = true
+                        }
+                    }
                     callback.onResult(photos, params.key+1)
                 } else {
                     retry = {

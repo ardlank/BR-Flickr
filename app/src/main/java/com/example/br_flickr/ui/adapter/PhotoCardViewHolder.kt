@@ -43,8 +43,7 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
             if(photo?.isBookmarked == true) {
                 photo?.isBookmarked = false
                 flickrDB.posts().delete(photo?.id)
-            }
-            else {
+            } else {
                 photo?.isBookmarked = true
                 flickrDB.posts().insert(photo)
             }
@@ -62,12 +61,7 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         return bookmarkedPhoto != null
     }
 
-    fun bind(photo: Photo?) {
-        photo?.isBookmarked = isBookmarked(photo)
-
-        this.photo = photo
-        title.text = photo?.title ?: "loading"
-        setBookmarkView()
+    fun setImage(){
         glide
             .load(photo?.url_n)
             .listener(object : RequestListener<Drawable> {
@@ -87,6 +81,16 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
             .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(photoImage)
+    }
+
+    fun bind(photo: Photo?) {
+        this.photo = photo
+
+        photo?.isBookmarked = isBookmarked(photo)
+
+        title.text = photo?.title ?: "loading"
+        setImage()
+        setBookmarkView()
     }
 
     companion object {

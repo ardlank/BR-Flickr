@@ -25,30 +25,26 @@ class PhotoSearchViewModel(flickrDB: FlickrDB)
 
     var currentPosts = MediatorLiveData<Posts<Photo>>()
 
-    val photos = switchMap(currentPosts) {
-//        it.pagedList?.value?.forEach { photo ->
-//            if(flickrDB.posts().findId(photo?.id) != null) photo?.isBookmarked = true
-//        }
-        it.pagedList }
-    val networkState = switchMap(currentPosts) { it.networkState }
-    val refreshState = switchMap(currentPosts) { it.refreshState }
+    val photos = switchMap(currentPosts) { posts -> posts.pagedList }
+    val networkState = switchMap(currentPosts) {  posts -> posts.networkState }
+    val refreshState = switchMap(currentPosts) {  posts -> posts.refreshState }
 
     init {
-        currentPosts.addSource(currentSearchQuery) {
-            currentPosts.value = photoRepo.postsOfPhoto(it)
+        currentPosts.addSource(currentSearchQuery) { query ->
+            currentPosts.value = photoRepo.postsOfPhoto(query)
         }
         currentPosts.addSource(currentRepo) {repo ->
             when(repo){
-                FlickrPostSource.Type.NETWORK -> currentPosts.value = photoRepo.postsOfPhoto(currentSearch()!!)
+                FlickrPostSource.Type.NETWORK -> {
+                    val query = currentSearch()
+                    if(query is String) currentPosts.value = photoRepo.postsOfPhoto(query)
+                }
                 FlickrPostSource.Type.DB -> currentPosts.value = photoRepoDB.postsOfPhoto()
             }
         }
     }
 
-
-    fun refresh() {
-        currentPosts.value?.refresh?.invoke()
-    }
+    fun refresh() = currentPosts.value?.refresh?.invoke()
 
     fun retry() {
         val listing = currentPosts.value
@@ -61,7 +57,10 @@ class PhotoSearchViewModel(flickrDB: FlickrDB)
     }
 
     fun showSearch(searchQuery: String): Boolean {
-        currentSearchQuery.value = searchQuery
+        if(currentSearch() == searchQuery) {
+            return false
+        }
+        currentSearchQuery.value = searchQuery.toUpperCase()
         return true
     }
 
