@@ -20,7 +20,8 @@ import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.ui.PhotoDisplayActivity
 import com.example.br_flickr.util.GlideRequests
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 //RecyclerView ViewHolder for a Photo Card
@@ -44,12 +45,12 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         bookmark.setOnClickListener {
             if (photo?.isBookmarked == true) {
                 photo?.isBookmarked = false
-                GlobalScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     flickrDatabase.removeBookmark(photo)
                 }
             } else {
                 photo?.isBookmarked = true
-                GlobalScope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     flickrDatabase.bookmarkPhoto(photo)
                 }
             }

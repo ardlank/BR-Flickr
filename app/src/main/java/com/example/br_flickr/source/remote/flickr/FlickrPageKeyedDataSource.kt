@@ -7,9 +7,8 @@ import com.example.br_flickr.source.SourceConstants
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.NetworkState.Companion.LOADED
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import com.example.br_flickr.util.NetworkState.Companion.LOADING
+import kotlinx.coroutines.*
 import java.io.IOException
 
 
@@ -31,7 +30,7 @@ class FlickrPageKeyedDataSource(
         val prevRetry = retry
         retry = null
         prevRetry?.let {
-            GlobalScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 it.invoke()
             }
         }
@@ -41,7 +40,7 @@ class FlickrPageKeyedDataSource(
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Photo>) {
         networkState.postValue(LOADING)
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = flickrApi.search(
                     searchQuery = searchQuery,
@@ -52,11 +51,7 @@ class FlickrPageKeyedDataSource(
                     val photos = photosResponse?.photos?.photo ?: emptyList()
                     retry = null
                     networkState.postValue(LOADED)
-                    for (photo in photos) {
-                        if (flickrDatabase.photoInRepo(photo?.id) != null) {
-                            photo.isBookmarked = true
-                        }
-                    }
+                    setBookmark(photos)
                     callback.onResult(photos, params.key + 1)
                 } else {
                     retry = {
@@ -83,7 +78,7 @@ class FlickrPageKeyedDataSource(
         networkState.postValue(LOADING)
         initialLoad.postValue(LOADING)
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = flickrApi.search(
                     searchQuery = searchQuery,
@@ -95,11 +90,7 @@ class FlickrPageKeyedDataSource(
                     retry = null
                     initialLoad.postValue(LOADED)
                     networkState.postValue(LOADED)
-                    for (photo in photos) {
-                        if (flickrDatabase.photoInRepo(photo?.id) != null) {
-                            photo.isBookmarked = true
-                        }
-                    }
+                    setBookmark(photos)
                     callback.onResult(
                         photos,
                         SourceConstants.FLICKR_INITIAL_PAGE_NUMBER,
@@ -124,6 +115,14 @@ class FlickrPageKeyedDataSource(
                     NetworkState.error(ioException.message ?: "unknown error")
                 networkState.postValue(error)
                 initialLoad.postValue(error)
+            }
+        }
+    }
+
+    fun setBookmark(photos: List<Photo>) {
+        for (photo in photos) {
+            if (flickrDatabase.photoInRepo(photo?.id) != null) {
+                photo.isBookmarked = true
             }
         }
     }
