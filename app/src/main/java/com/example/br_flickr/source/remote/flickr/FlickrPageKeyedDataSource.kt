@@ -53,11 +53,11 @@ class FlickrPageKeyedDataSource(
                     retry = null
                     networkState.postValue(LOADED)
                     for (photo in photos) {
-                        if (flickrDatabase.PhotoInRepo(photo?.id) != null) {
+                        if (flickrDatabase.photoInRepo(photo?.id) != null) {
                             photo.isBookmarked = true
                         }
                     }
-                    callback.onResult(photos, params.key+1)
+                    callback.onResult(photos, params.key + 1)
                 } else {
                     retry = {
                         loadAfter(params, callback)
@@ -66,7 +66,7 @@ class FlickrPageKeyedDataSource(
                         NetworkState.error("error code: ${response.code()}")
                     )
                 }
-            } catch (ioException: IOException){
+            } catch (ioException: IOException) {
                 retry = {
                     loadAfter(params, callback)
                 }
@@ -96,11 +96,15 @@ class FlickrPageKeyedDataSource(
                     initialLoad.postValue(LOADED)
                     networkState.postValue(LOADED)
                     for (photo in photos) {
-                        if (flickrDatabase.PhotoInRepo(photo?.id) != null) {
+                        if (flickrDatabase.photoInRepo(photo?.id) != null) {
                             photo.isBookmarked = true
                         }
                     }
-                    callback.onResult(photos, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER+1)
+                    callback.onResult(
+                        photos,
+                        SourceConstants.FLICKR_INITIAL_PAGE_NUMBER,
+                        SourceConstants.FLICKR_INITIAL_PAGE_NUMBER + 1
+                    )
                 } else {
                     retry = {
                         loadInitial(params, callback)
@@ -112,7 +116,7 @@ class FlickrPageKeyedDataSource(
                         NetworkState.error("error code: ${response.code()}")
                     )
                 }
-            } catch (ioException: IOException){
+            } catch (ioException: IOException) {
                 retry = {
                     loadInitial(params, callback)
                 }

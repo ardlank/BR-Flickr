@@ -66,13 +66,13 @@ class FlickrActivity : AppCompatActivity() {
         recyclerView.scrollToPosition(0)
     }
 
-    fun navigateToHome() {
+    private fun navigateToHome() {
         viewModel.setRepo(isNetwork = true)
         menuItem.isVisible = true
         setSearchTitle()
     }
 
-    fun navigateToBookmarks() {
+    private fun navigateToBookmarks() {
         viewModel.setRepo(isNetwork = false)
         menuItem.isVisible = false
         supportActionBar?.title = getString(R.string.bookmarks)
@@ -136,7 +136,7 @@ class FlickrActivity : AppCompatActivity() {
     }
 
     private fun setSearchTitle() {
-        if(viewModel.currentSearch() is String) {
+        if (viewModel.currentSearch() is String) {
             supportActionBar?.title = viewModel.currentSearch()
         }
     }

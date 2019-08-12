@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target
 import com.example.br_flickr.R
 
 //Display image View
-class PhotoDisplayActivity: AppCompatActivity() {
+class PhotoDisplayActivity : AppCompatActivity() {
 
     private lateinit var progressbar: ProgressBar
 
@@ -28,34 +28,38 @@ class PhotoDisplayActivity: AppCompatActivity() {
         setUpView()
     }
 
-    fun setUpView() {
+    private fun setUpView() {
         photoView = findViewById(R.id.photoImage)
         progressbar = findViewById(R.id.spinner)
-        if(intent != null) {
+        if (intent != null) {
             val photoTitle = intent.extras?.get("photoTitle")
             val photoUrl = intent.extras?.get("photoUrl")
-            if(photoTitle is String) setImageTitle(photoTitle)
-            if(photoUrl is String) setImage(photoUrl)
+            if (photoTitle is String) setImageTitle(photoTitle)
+            if (photoUrl is String) setImage(photoUrl)
         }
     }
 
-    fun setImageTitle(title: String) {
+    private fun setImageTitle(title: String) {
         supportActionBar?.title = title
     }
 
-    fun setImage(photoUrl: String?) {
+    private fun setImage(photoUrl: String?) {
         Glide
             .with(this)
             .load(photoUrl)
             .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
-                                          isFirstResource: Boolean): Boolean {
+                override fun onLoadFailed(
+                    e: GlideException?, model: Any?, target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
                     onFinished()
                     return false
                 }
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                                             dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(
+                    resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                    dataSource: DataSource?, isFirstResource: Boolean
+                ): Boolean {
                     onFinished()
                     return false
                 }
@@ -65,9 +69,7 @@ class PhotoDisplayActivity: AppCompatActivity() {
             .into(photoView)
     }
 
-    fun onFinished(){
-        if (progressbar != null) {
-            progressbar.visibility = View.GONE
-        }
+    private fun onFinished() {
+        progressbar.visibility = View.GONE
     }
 }

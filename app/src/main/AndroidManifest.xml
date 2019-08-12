@@ -3,7 +3,7 @@
           package="com.example.br_flickr">
 
     <!--Internet Permission-->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:allowBackup="true"
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
             <meta-data android:name="android.app.searchable"
@@ -31,11 +31,8 @@
         <activity android:name=".ui.PhotoDisplayActivity"
                   android:parentActivityName=".ui.FlickrActivity">
         </activity>
-        <!--<activity android:name=".ui.PhotoSearchActivity"-->
-                  <!--android:parentActivityName=".ui.FlickrActivity">-->
-        <!--</activity>-->
         <provider android:name=".util.MySuggestionProvider"
-                  android:authorities="com.example.MySuggestionProvider" />
+                  android:authorities="com.example.MySuggestionProvider"/>
     </application>
 
 </manifest>

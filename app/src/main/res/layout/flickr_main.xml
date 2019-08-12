@@ -32,6 +32,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:background="?android:attr/windowBackground"
-            app:menu="@menu/navigation" />
+            app:menu="@menu/navigation"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

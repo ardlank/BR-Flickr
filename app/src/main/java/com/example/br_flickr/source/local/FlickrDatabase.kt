@@ -21,16 +21,17 @@ class FlickrDatabase private constructor(
         }
     }
 
-    fun PhotoInRepo(id: String?) = flickrDao.findId(id)
+    fun photoInRepo(id: String?) = flickrDao.findId(id)
 
-    fun getAllPosts() : DataSource.Factory<Int, Photo> {
+    fun getAllPosts(): DataSource.Factory<Int, Photo> {
         return flickrDao.allPosts()
     }
 
     companion object {
 
         // For Singleton instantiation
-        @Volatile private var instance: FlickrDatabase? = null
+        @Volatile
+        private var instance: FlickrDatabase? = null
 
         fun getInstance(flickrDao: FlickrDao) =
             instance ?: synchronized(this) {

@@ -14,7 +14,7 @@ import com.example.br_flickr.source.remote.FlickrPostSource
 class PhotoRepo(private val flickrDatabase: FlickrDatabase) : FlickrPostSource {
 
     @MainThread
-    override fun postsOfPhoto(searchQuery: String) : Posts<Photo> {
+    override fun postsOfPhoto(searchQuery: String): Posts<Photo> {
         val sourceFactory = FlickrDataSourceFactory(searchQuery, flickrDatabase)
 
         val pagedListConfig = PagedList.Config.Builder()

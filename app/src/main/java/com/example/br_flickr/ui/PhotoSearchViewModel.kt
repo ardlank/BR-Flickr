@@ -10,8 +10,7 @@ import com.example.br_flickr.source.local.PhotoRepoDB
 import com.example.br_flickr.source.remote.FlickrPostSource
 
 //ViewModel of Search View
-class PhotoSearchViewModel(flickrDatabase: FlickrDatabase)
-    : ViewModel() {
+class PhotoSearchViewModel(flickrDatabase: FlickrDatabase) : ViewModel() {
 
     private var photoRepo: PhotoRepo = PhotoRepo(flickrDatabase)
     private var photoRepoDB: PhotoRepoDB = PhotoRepoDB(flickrDatabase)
@@ -19,21 +18,21 @@ class PhotoSearchViewModel(flickrDatabase: FlickrDatabase)
     private val currentSearchQuery = MutableLiveData<String>()
     private val currentRepo = MutableLiveData<FlickrPostSource.Type>()
 
-    var currentPosts = MediatorLiveData<Posts<Photo>>()
+    private var currentPosts = MediatorLiveData<Posts<Photo>>()
 
     val photos = switchMap(currentPosts) { posts -> posts.pagedList }
-    val networkState = switchMap(currentPosts) {  posts -> posts.networkState }
-    val refreshState = switchMap(currentPosts) {  posts -> posts.refreshState }
+    val networkState = switchMap(currentPosts) { posts -> posts.networkState }
+    val refreshState = switchMap(currentPosts) { posts -> posts.refreshState }
 
     init {
         currentPosts.addSource(currentSearchQuery) { query ->
             currentPosts.value = photoRepo.postsOfPhoto(query)
         }
-        currentPosts.addSource(currentRepo) {repo ->
-            when(repo){
+        currentPosts.addSource(currentRepo) { repo ->
+            when (repo) {
                 FlickrPostSource.Type.NETWORK -> {
                     val query = currentSearch()
-                    if(query is String) currentPosts.value = photoRepo.postsOfPhoto(query)
+                    if (query is String) currentPosts.value = photoRepo.postsOfPhoto(query)
                 }
                 FlickrPostSource.Type.DB -> currentPosts.value = photoRepoDB.postsOfPhoto()
             }
@@ -53,7 +52,7 @@ class PhotoSearchViewModel(flickrDatabase: FlickrDatabase)
     }
 
     fun showSearch(searchQuery: String): Boolean {
-        if(currentSearch() == searchQuery) {
+        if (currentSearch() == searchQuery) {
             return false
         }
         currentSearchQuery.value = searchQuery.toUpperCase()

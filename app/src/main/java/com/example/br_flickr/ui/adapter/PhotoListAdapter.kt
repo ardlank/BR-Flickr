@@ -14,7 +14,8 @@ import com.example.br_flickr.util.NetworkState
 class PhotoListAdapter(
     private val glide: GlideRequests,
     private val flickrDatabase: FlickrDatabase,
-    private val retryCallback: () -> Unit) :
+    private val retryCallback: () -> Unit
+) :
     PagedListAdapter<Photo, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
     private var networkState: NetworkState? = null
@@ -29,7 +30,8 @@ class PhotoListAdapter(
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
-        payloads: MutableList<Any>) {
+        payloads: MutableList<Any>
+    ) {
 
         if (payloads.isNotEmpty()) {
             val item = getItem(position)

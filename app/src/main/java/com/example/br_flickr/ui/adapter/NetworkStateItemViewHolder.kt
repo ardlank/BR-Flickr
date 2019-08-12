@@ -12,18 +12,21 @@ import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.Status
 
 //RecyclerView ViewHolder for NetworkStateItem
-class NetworkStateItemViewHolder(view: View,
-    private val retryCallback: () -> Unit)
-    : RecyclerView.ViewHolder(view) {
+class NetworkStateItemViewHolder(
+    view: View,
+    private val retryCallback: () -> Unit
+) : RecyclerView.ViewHolder(view) {
 
     private val progressBar = view.findViewById<ProgressBar>(R.id.progress_bar)
     private val retry = view.findViewById<Button>(R.id.retry_button)
     private val errorMsg = view.findViewById<TextView>(R.id.error_msg)
+
     init {
         retry.setOnClickListener {
             retryCallback()
         }
     }
+
     fun bind(networkState: NetworkState?) {
         progressBar.visibility =
             toVisibility(networkState?.status == Status.RUNNING)
@@ -41,7 +44,7 @@ class NetworkStateItemViewHolder(view: View,
             return NetworkStateItemViewHolder(view, retryCallback)
         }
 
-        fun toVisibility(constraint : Boolean): Int {
+        fun toVisibility(constraint: Boolean): Int {
             return if (constraint) {
                 View.VISIBLE
             } else {

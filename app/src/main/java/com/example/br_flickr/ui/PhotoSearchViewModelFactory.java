@@ -7,8 +7,7 @@ import com.example.br_flickr.source.local.FlickrDatabase;
 
 public class PhotoSearchViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private FlickrDatabase flickrDatabase;
-
+    private static FlickrDatabase flickrDatabase;
 
     public PhotoSearchViewModelFactory(@NonNull FlickrDatabase flickrDatabase) {
         this.flickrDatabase = flickrDatabase;

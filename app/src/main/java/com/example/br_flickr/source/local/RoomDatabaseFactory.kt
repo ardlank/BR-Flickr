@@ -16,7 +16,8 @@ abstract class RoomDatabaseFactory : RoomDatabase() {
     companion object {
 
         // For Singleton instantiation
-        @Volatile private var instance: RoomDatabaseFactory? = null
+        @Volatile
+        private var instance: RoomDatabaseFactory? = null
 
         fun getInstance(context: Context, databaseName: String): RoomDatabaseFactory {
             return instance ?: synchronized(this) {
@@ -24,7 +25,7 @@ abstract class RoomDatabaseFactory : RoomDatabase() {
             }
         }
 
-        fun create(context: Context, databaseName: String): RoomDatabaseFactory {
+        private fun create(context: Context, databaseName: String): RoomDatabaseFactory {
             val databaseBuilder = Room.databaseBuilder(context, RoomDatabaseFactory::class.java, databaseName)
             return databaseBuilder
                 .fallbackToDestructiveMigration()

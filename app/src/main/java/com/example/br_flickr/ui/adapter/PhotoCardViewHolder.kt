@@ -24,14 +24,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 //RecyclerView ViewHolder for a Photo Card
-class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDatabase: FlickrDatabase):
+class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDatabase: FlickrDatabase) :
     RecyclerView.ViewHolder(view) {
 
     private val photoImage = view.findViewById<ImageView>(R.id.photoImage)
     private val title = view.findViewById<TextView>(R.id.title)
     private val bookmark = view.findViewById<ImageButton>(R.id.bookmark)
     private val progressbar = view.findViewById<ProgressBar>(R.id.spinner)
-    private var photo : Photo? = null
+    private var photo: Photo? = null
 
     init {
         view.setOnClickListener {
@@ -42,7 +42,7 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
             view.context.startActivity(intent)
         }
         bookmark.setOnClickListener {
-            if(photo?.isBookmarked == true) {
+            if (photo?.isBookmarked == true) {
                 photo?.isBookmarked = false
                 GlobalScope.launch {
                     flickrDatabase.removeBookmark(photo)
@@ -57,29 +57,28 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         }
     }
 
-    private fun setBookmarkView(){
-        if(photo?.isBookmarked == true) bookmark.setImageResource(R.drawable.ic_bookmark_filled)
+    private fun setBookmarkView() {
+        if (photo?.isBookmarked == true) bookmark.setImageResource(R.drawable.ic_bookmark_filled)
         else bookmark.setImageResource(R.drawable.ic_bookmark)
     }
 
-//    val isBookmarked = map(flickrDatabase.PhotoInRepo(photo?.id)) {
-//        photo?.isBookmarked = it?.isBookmarked
-//        setBookmarkView()
-//    }
-
-    fun setImage(){
+    private fun setImage() {
         glide
             .load(photo?.url_n)
             .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
-                                          isFirstResource: Boolean): Boolean {
+                override fun onLoadFailed(
+                    e: GlideException?, model: Any?, target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
                     onFinished()
                     photo?.title = e?.message
                     return false
                 }
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                                             dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(
+                    resource: Drawable?, model: Any?, target: Target<Drawable>?,
+                    dataSource: DataSource?, isFirstResource: Boolean
+                ): Boolean {
                     onFinished()
                     return false
                 }
@@ -92,7 +91,6 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     fun bind(photo: Photo?) {
         this.photo = photo
         setBookmarkView()
-        //flickrDatabase.PhotoInRepo(photo?.id).observe(view.context)
         title.text = photo?.title ?: "loading"
         setImage()
         setBookmarkView()

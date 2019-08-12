@@ -12,10 +12,10 @@ import com.example.br_flickr.source.remote.FlickrPostSource
 import com.example.br_flickr.util.NetworkState
 
 //Returns a posts class that loads data directly from Room. Uses Paging
-class PhotoRepoDB (private val flickrDatabase: FlickrDatabase) : FlickrPostSource {
+class PhotoRepoDB(private val flickrDatabase: FlickrDatabase) : FlickrPostSource {
 
-    val networkState = MutableLiveData<NetworkState>()
-    val initialLoad = MutableLiveData<NetworkState>()
+    private val networkState = MutableLiveData<NetworkState>()
+    private val initialLoad = MutableLiveData<NetworkState>()
 
     @MainThread
     override fun postsOfPhoto(): Posts<Photo> {
@@ -32,12 +32,12 @@ class PhotoRepoDB (private val flickrDatabase: FlickrDatabase) : FlickrPostSourc
         )
     }
 
-    fun refreshRoom() {
+    private fun refreshRoom() {
         networkState.value = NetworkState.LOADED
         initialLoad.value = NetworkState.LOADED
     }
 
-    fun getRoomPhotos() : LiveData<PagedList<Photo>> {
+    private fun getRoomPhotos(): LiveData<PagedList<Photo>> {
         return LivePagedListBuilder(flickrDatabase.getAllPosts(), SourceConstants.FLICKR_PAGE_SIZE)
             .build()
     }

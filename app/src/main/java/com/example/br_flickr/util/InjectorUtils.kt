@@ -10,7 +10,8 @@ object InjectorUtils {
 
     fun getPhotoRepo(context: Context): FlickrDatabase {
         return FlickrDatabase.getInstance(
-            RoomDatabaseFactory.getInstance(context.applicationContext, FLICKR_DATABASE_NAME).posts())
+            RoomDatabaseFactory.getInstance(context.applicationContext, FLICKR_DATABASE_NAME).posts()
+        )
     }
 
     fun providePhotoViewModelFactory(context: Context):
