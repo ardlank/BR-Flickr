@@ -3,14 +3,15 @@ package com.example.br_flickr.ui;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.example.br_flickr.source.local.FlickrDB;
+import com.example.br_flickr.source.local.FlickrDatabase;
 
-public class PhotoSearchViewModelFactory implements ViewModelProvider.Factory {
-    private FlickrDB flickrDB;
+public class PhotoSearchViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+
+    private FlickrDatabase flickrDatabase;
 
 
-    public PhotoSearchViewModelFactory(FlickrDB flickrDB) {
-        this.flickrDB = flickrDB;
+    public PhotoSearchViewModelFactory(@NonNull FlickrDatabase flickrDatabase) {
+        this.flickrDatabase = flickrDatabase;
     }
 
     @NonNull
@@ -18,7 +19,7 @@ public class PhotoSearchViewModelFactory implements ViewModelProvider.Factory {
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(PhotoSearchViewModel.class)) {
-            return (T) new PhotoSearchViewModel(flickrDB);
+            return (T) new PhotoSearchViewModel(flickrDatabase);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

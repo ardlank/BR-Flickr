@@ -14,4 +14,7 @@ object SourceConstants {
     const val FLICKR_API_KEY = BuildConfig.FLICKR_API_KEY
 
     const val FLICKR_DEFAULT_SEARCH = "Sports"
+
+    //Database
+    const val FLICKR_DATABASE_NAME = "flickr.db"
 }

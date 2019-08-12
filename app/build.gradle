@@ -73,6 +73,9 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
+    implementation "androidx.navigation:navigation-fragment-ktx:$lifecycle_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$lifecycle_version"
+
     compileOnly "javax.annotation:jsr250-api:1.0"
 
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

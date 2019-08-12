@@ -2,23 +2,19 @@ package com.example.br_flickr.ui
 
 import androidx.lifecycle.*
 import com.example.br_flickr.source.remote.flickr.PhotoRepo
-import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.Transformations.switchMap
-import androidx.paging.PagedList
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.source.Posts
-import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.source.local.PhotoRepoDB
 import com.example.br_flickr.source.remote.FlickrPostSource
-import com.example.br_flickr.util.NetworkState
-import com.google.gson.Gson
 
 //ViewModel of Search View
-class PhotoSearchViewModel(flickrDB: FlickrDB)
+class PhotoSearchViewModel(flickrDatabase: FlickrDatabase)
     : ViewModel() {
 
-    private var photoRepo: PhotoRepo = PhotoRepo(flickrDB)
-    private var photoRepoDB: PhotoRepoDB = PhotoRepoDB(flickrDB)
+    private var photoRepo: PhotoRepo = PhotoRepo(flickrDatabase)
+    private var photoRepoDB: PhotoRepoDB = PhotoRepoDB(flickrDatabase)
 
     private val currentSearchQuery = MutableLiveData<String>()
     private val currentRepo = MutableLiveData<FlickrPostSource.Type>()

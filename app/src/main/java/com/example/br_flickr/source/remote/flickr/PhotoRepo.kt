@@ -7,15 +7,15 @@ import com.example.br_flickr.model.Photo
 import androidx.paging.PagedList
 import com.example.br_flickr.source.SourceConstants
 import com.example.br_flickr.source.Posts
-import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.source.remote.FlickrPostSource
 
 //Returns a posts class that loads data directly from API. Uses Paging
-class PhotoRepo(private val flickrDB: FlickrDB) : FlickrPostSource {
+class PhotoRepo(private val flickrDatabase: FlickrDatabase) : FlickrPostSource {
 
     @MainThread
     override fun postsOfPhoto(searchQuery: String) : Posts<Photo> {
-        val sourceFactory = FlickrDataSourceFactory(searchQuery, flickrDB)
+        val sourceFactory = FlickrDataSourceFactory(searchQuery, flickrDatabase)
 
         val pagedListConfig = PagedList.Config.Builder()
             .setEnablePlaceholders(false)

@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.R
-import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.util.GlideRequests
 import com.example.br_flickr.util.NetworkState
 
 //List Adapter for photo cards and network state.
 class PhotoListAdapter(
     private val glide: GlideRequests,
-    private val flickrDB: FlickrDB,
+    private val flickrDatabase: FlickrDatabase,
     private val retryCallback: () -> Unit) :
     PagedListAdapter<Photo, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
@@ -41,7 +41,7 @@ class PhotoListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.photo_card -> PhotoCardViewHolder.create(parent, glide, flickrDB)
+            R.layout.photo_card -> PhotoCardViewHolder.create(parent, glide, flickrDatabase)
             R.layout.network_state_item -> NetworkStateItemViewHolder.create(
                 parent,
                 retryCallback

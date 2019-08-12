@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@+id/photo_list_fragment">
+
+    <fragment
+            android:id="@+id/photo_list_fragment"
+            android:name=".ui.PhotoListFragment"
+            android:label="search"
+            tools:layout="@layout/fragment_photo_list">
+
+        <action
+                android:id="@+id/action_photo_list_fragment_to_photo_view_fragment"
+                app:destination="@id/photo_view_fragment" />
+                <!--app:enterAnim="@anim/slide_in_right"-->
+                <!--app:exitAnim="@anim/slide_out_left"-->
+                <!--app:popEnterAnim="@anim/slide_in_left"-->
+                <!--app:popExitAnim="@anim/slide_out_right" />-->
+    </fragment>
+
+    <fragment
+            android:id="@+id/photo_view_fragment"
+            android:name=".ui.PhotoViewFragment"
+            android:label="bookmarks"
+            tools:layout="@layout/fragment_photo_view">
+        <argument
+                android:name="photoUrl"
+                app:argType="string" />
+        <argument
+                android:name="photoTitle"
+                app:argType="string" />
+    </fragment>
+
+</navigation>

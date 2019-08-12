@@ -7,19 +7,19 @@ import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.br_flickr.R
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.source.SourceConstants.FLICKR_DEFAULT_SEARCH
-import com.example.br_flickr.source.local.FlickrDB
 import com.example.br_flickr.ui.adapter.PhotoListAdapter
 import com.example.br_flickr.util.GlideApp
+import com.example.br_flickr.util.InjectorUtils
 import com.example.br_flickr.util.MySuggestionProvider
 import com.example.br_flickr.util.NetworkState
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,22 +28,18 @@ import kotlinx.android.synthetic.main.flickr_main.*
 
 class FlickrActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PhotoSearchViewModel
+    private val viewModel: PhotoSearchViewModel by viewModels {
+        InjectorUtils.providePhotoViewModelFactory(this)
+    }
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var menuItem: MenuItem
 
-    private lateinit var flickrDB: FlickrDB
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.flickr_main)
         navigation.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener)
-
-        flickrDB = FlickrDB.create(this)
-
-        viewModel = ViewModelProviders.of(this, PhotoSearchViewModelFactory(flickrDB)).get(PhotoSearchViewModel::class.java)
 
         initAdapter()
         initSwipeToRefresh()
@@ -84,7 +80,7 @@ class FlickrActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = PhotoListAdapter(glide, flickrDB) {
+        val adapter = PhotoListAdapter(glide, InjectorUtils.getPhotoRepo(this)) {
             viewModel.retry()
         }
         recyclerView = findViewById(R.id.recyclerView)

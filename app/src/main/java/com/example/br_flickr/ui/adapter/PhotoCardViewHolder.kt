@@ -17,12 +17,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.R
-import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.ui.PhotoDisplayActivity
 import com.example.br_flickr.util.GlideRequests
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 //RecyclerView ViewHolder for a Photo Card
-class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDB: FlickrDB):
+class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDatabase: FlickrDatabase):
     RecyclerView.ViewHolder(view) {
 
     private val photoImage = view.findViewById<ImageView>(R.id.photoImage)
@@ -42,10 +44,14 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         bookmark.setOnClickListener {
             if(photo?.isBookmarked == true) {
                 photo?.isBookmarked = false
-                flickrDB.posts().delete(photo?.id)
+                GlobalScope.launch {
+                    flickrDatabase.removeBookmark(photo)
+                }
             } else {
                 photo?.isBookmarked = true
-                flickrDB.posts().insert(photo)
+                GlobalScope.launch {
+                    flickrDatabase.bookmarkPhoto(photo)
+                }
             }
             setBookmarkView()
         }
@@ -56,10 +62,10 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         else bookmark.setImageResource(R.drawable.ic_bookmark)
     }
 
-    fun isBookmarked(photo: Photo?) : Boolean {
-        val bookmarkedPhoto = flickrDB.posts().findId(photo?.id)
-        return bookmarkedPhoto != null
-    }
+//    val isBookmarked = map(flickrDatabase.PhotoInRepo(photo?.id)) {
+//        photo?.isBookmarked = it?.isBookmarked
+//        setBookmarkView()
+//    }
 
     fun setImage(){
         glide
@@ -85,19 +91,18 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
 
     fun bind(photo: Photo?) {
         this.photo = photo
-
-        photo?.isBookmarked = isBookmarked(photo)
-
+        setBookmarkView()
+        //flickrDatabase.PhotoInRepo(photo?.id).observe(view.context)
         title.text = photo?.title ?: "loading"
         setImage()
         setBookmarkView()
     }
 
     companion object {
-        fun create(parent: ViewGroup, glide: GlideRequests, flickrDB: FlickrDB): PhotoCardViewHolder {
+        fun create(parent: ViewGroup, glide: GlideRequests, flickrDatabase: FlickrDatabase): PhotoCardViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.photo_card, parent, false)
-            return PhotoCardViewHolder(view, glide, flickrDB)
+            return PhotoCardViewHolder(view, glide, flickrDatabase)
         }
     }
 

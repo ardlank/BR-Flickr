@@ -4,7 +4,7 @@ import com.example.br_flickr.model.Photo
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.br_flickr.source.SourceConstants
-import com.example.br_flickr.source.local.FlickrDB
+import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.NetworkState.Companion.LOADED
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +17,7 @@ import java.io.IOException
 class FlickrPageKeyedDataSource(
     private val flickrApi: FlickrApi,
     private val searchQuery: String,
-    private val flickrDB: FlickrDB
+    private val flickrDatabase: FlickrDatabase
 ) : PageKeyedDataSource<Int, Photo>() {
 
     //incase of retry
@@ -53,7 +53,7 @@ class FlickrPageKeyedDataSource(
                     retry = null
                     networkState.postValue(LOADED)
                     for (photo in photos) {
-                        if (flickrDB.posts().findId(photo?.id) != null) {
+                        if (flickrDatabase.PhotoInRepo(photo?.id) != null) {
                             photo.isBookmarked = true
                         }
                     }
@@ -72,7 +72,7 @@ class FlickrPageKeyedDataSource(
                 }
                 networkState.postValue(
                     NetworkState.error(
-                        ioException.message ?: "unknown err"
+                        ioException.message ?: "unknown error"
                     )
                 )
             }
@@ -95,6 +95,11 @@ class FlickrPageKeyedDataSource(
                     retry = null
                     initialLoad.postValue(LOADED)
                     networkState.postValue(LOADED)
+                    for (photo in photos) {
+                        if (flickrDatabase.PhotoInRepo(photo?.id) != null) {
+                            photo.isBookmarked = true
+                        }
+                    }
                     callback.onResult(photos, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER, SourceConstants.FLICKR_INITIAL_PAGE_NUMBER+1)
                 } else {
                     retry = {
