@@ -14,7 +14,7 @@ interface FlickrDao {
     fun delete(photo: Photo?)
 
     @Query("SELECT * FROM photos ORDER BY id COLLATE NOCASE ASC")
-    fun allPosts(): DataSource.Factory<Int, Photo>
+    fun allBookmarkPosts(): DataSource.Factory<Int, Photo>
 
     @Query("SELECT * FROM photos WHERE id = :id")
     fun findId(id: String?): Photo?

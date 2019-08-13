@@ -2,13 +2,11 @@ package com.example.br_flickr.ui.adapter
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -32,10 +30,14 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     private val title = view.findViewById<TextView>(R.id.title)
     private val bookmark = view.findViewById<ImageButton>(R.id.bookmark)
     private val progressbar = view.findViewById<ProgressBar>(R.id.spinner)
+    private val retryButton = view.findViewById<Button>(R.id.retry_button)
     private var photo: Photo? = null
 
+    private val TAG = "PhotoCardViewHolder"
+
     init {
-        view.setOnClickListener {
+        itemView.isClickable = false
+        itemView.setOnClickListener {
             val intent = Intent(view.context, PhotoDisplayActivity::class.java).apply {
                 putExtra("photoUrl", photo?.url_m)
                 putExtra("photoTitle", photo?.title)
@@ -43,44 +45,49 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
             view.context.startActivity(intent)
         }
         bookmark.setOnClickListener {
-            if (photo?.isBookmarked == true) {
-                photo?.isBookmarked = false
-                CoroutineScope(Dispatchers.IO).launch {
-                    flickrDatabase.removeBookmark(photo)
-                }
-            } else {
-                photo?.isBookmarked = true
-                CoroutineScope(Dispatchers.IO).launch {
-                    flickrDatabase.bookmarkPhoto(photo)
-                }
-            }
-            setBookmarkView()
+            setBookmark()
+        }
+        retryButton.setOnClickListener {
+            showProgress()
+            bind(photo)
         }
     }
 
-    private fun setBookmarkView() {
+    private fun setBookmarkIcon() {
         if (photo?.isBookmarked == true) bookmark.setImageResource(R.drawable.ic_bookmark_filled)
         else bookmark.setImageResource(R.drawable.ic_bookmark)
+    }
+
+    private fun setBookmark(){
+        if (photo?.isBookmarked == true) {
+            photo?.isBookmarked = false
+            CoroutineScope(Dispatchers.IO).launch {
+                flickrDatabase.removeBookmark(photo)
+            }
+        } else {
+            photo?.isBookmarked = true
+            CoroutineScope(Dispatchers.IO).launch {
+                flickrDatabase.bookmarkPhoto(photo)
+            }
+        }
+        setBookmarkIcon()
     }
 
     private fun setImage() {
         glide
             .load(photo?.url_n)
             .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?, model: Any?, target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    onFinished()
-                    photo?.title = e?.message
+                override fun onLoadFailed(e: GlideException?, model: Any?,
+                                          target: Target<Drawable>?,
+                                          isFirstResource: Boolean): Boolean {
+                    Log.e(TAG, "Load failed", e);
+                    showRetry()
                     return false
                 }
-
-                override fun onResourceReady(
-                    resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                    dataSource: DataSource?, isFirstResource: Boolean
-                ): Boolean {
-                    onFinished()
+                override fun onResourceReady(resource: Drawable?, model: Any?,
+                                             target: Target<Drawable>?, dataSource: DataSource?,
+                                             isFirstResource: Boolean): Boolean {
+                    clearAll()
                     return false
                 }
             })
@@ -91,10 +98,9 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
 
     fun bind(photo: Photo?) {
         this.photo = photo
-        setBookmarkView()
+        setBookmarkIcon()
         title.text = photo?.title ?: "loading"
         setImage()
-        setBookmarkView()
     }
 
     companion object {
@@ -106,14 +112,24 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     }
 
     fun updatePhoto(item: Photo?) {
-        photo = item
-        photo?.title = item?.title
+        bind(photo)
     }
 
-    private fun onFinished() {
-        if (progressbar != null) {
-            progressbar.visibility = View.GONE
-        }
+    private fun clearAll() {
+        itemView.isClickable = true
+        progressbar.visibility = View.GONE
+        retryButton.visibility = View.GONE
+    }
+
+    private fun showProgress() {
+        retryButton.visibility = View.GONE
+        progressbar.visibility = View.VISIBLE
+    }
+
+    private fun showRetry(){
+        itemView.isClickable = false
+        progressbar.visibility = View.GONE
+        retryButton.visibility = View.VISIBLE
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.br_flickr.source.remote.flickr
 
+import android.util.Log
 import com.example.br_flickr.model.Photo
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
@@ -9,7 +10,6 @@ import com.example.br_flickr.util.NetworkState
 import com.example.br_flickr.util.NetworkState.Companion.LOADED
 import com.example.br_flickr.util.NetworkState.Companion.LOADING
 import kotlinx.coroutines.*
-import java.io.IOException
 
 
 //A data source that uses the before/after keys returned in page requests. Before is not used
@@ -18,6 +18,8 @@ class FlickrPageKeyedDataSource(
     private val searchQuery: String,
     private val flickrDatabase: FlickrDatabase
 ) : PageKeyedDataSource<Int, Photo>() {
+
+    private val TAG = "FlickrPageKeyedSource"
 
     //incase of retry
     private var retry: (() -> Any)? = null
@@ -30,9 +32,7 @@ class FlickrPageKeyedDataSource(
         val prevRetry = retry
         retry = null
         prevRetry?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-                it.invoke()
-            }
+            it.invoke()
         }
     }
 
@@ -61,15 +61,13 @@ class FlickrPageKeyedDataSource(
                         NetworkState.error("error code: ${response.code()}")
                     )
                 }
-            } catch (ioException: IOException) {
+            } catch (exception: Exception) {
                 retry = {
                     loadAfter(params, callback)
                 }
-                networkState.postValue(
-                    NetworkState.error(
-                        ioException.message ?: "unknown error"
-                    )
-                )
+                val message = exception.message ?: "unknown error"
+                Log.e(TAG, message, exception)
+                networkState.postValue(NetworkState.error(message))
             }
         }
     }
@@ -107,19 +105,20 @@ class FlickrPageKeyedDataSource(
                         NetworkState.error("error code: ${response.code()}")
                     )
                 }
-            } catch (ioException: IOException) {
+            } catch (exception: Exception) {
                 retry = {
                     loadInitial(params, callback)
                 }
-                val error =
-                    NetworkState.error(ioException.message ?: "unknown error")
+                val message = exception.message ?: "unknown error"
+                Log.e("loadInitial", message, exception)
+                val error = NetworkState.error(message)
                 networkState.postValue(error)
                 initialLoad.postValue(error)
             }
         }
     }
 
-    fun setBookmark(photos: List<Photo>) {
+    private fun setBookmark(photos: List<Photo>) {
         for (photo in photos) {
             if (flickrDatabase.photoInRepo(photo?.id) != null) {
                 photo.isBookmarked = true

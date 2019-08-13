@@ -23,8 +23,13 @@ class FlickrDatabase private constructor(
 
     fun photoInRepo(id: String?) = flickrDao.findId(id)
 
-    fun getAllPosts(): DataSource.Factory<Int, Photo> {
-        return flickrDao.allPosts()
+    fun getAllBookmarks(): DataSource.Factory<Int, Photo> {
+        return flickrDao.allBookmarkPosts()
+    }
+
+    //Future work: Implement search
+    fun getQueryBookmarks(query: String): DataSource.Factory<Int, Photo> {
+        return flickrDao.allBookmarkPosts()
     }
 
     companion object {

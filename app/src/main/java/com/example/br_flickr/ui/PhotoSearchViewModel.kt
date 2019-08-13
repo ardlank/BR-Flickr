@@ -7,7 +7,7 @@ import com.example.br_flickr.model.Photo
 import com.example.br_flickr.source.Posts
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.source.local.PhotoRepoDB
-import com.example.br_flickr.source.remote.FlickrPostSource
+import com.example.br_flickr.source.FlickrPostSource
 
 //ViewModel of Search View
 class PhotoSearchViewModel(flickrDatabase: FlickrDatabase) : ViewModel() {

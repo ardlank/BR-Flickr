@@ -2,7 +2,9 @@ package com.example.br_flickr.ui
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -21,21 +23,33 @@ class PhotoDisplayActivity : AppCompatActivity() {
 
     private lateinit var photoView: ImageView
 
+    private lateinit var retryButton: Button
+
+    private val TAG = "PhotoDisplayActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_display)
 
+        initComponents()
         setUpView()
+        setupRetryListner()
+    }
+
+    private fun initComponents() {
+        photoView = findViewById(R.id.photoImage)
+        progressbar = findViewById(R.id.spinner)
+        retryButton = findViewById(R.id.retry_button)
     }
 
     private fun setUpView() {
-        photoView = findViewById(R.id.photoImage)
-        progressbar = findViewById(R.id.spinner)
         if (intent != null) {
             val photoTitle = intent.extras?.get("photoTitle")
             val photoUrl = intent.extras?.get("photoUrl")
             if (photoTitle is String) setImageTitle(photoTitle)
             if (photoUrl is String) setImage(photoUrl)
+        } else {
+            showRetry()
         }
     }
 
@@ -48,28 +62,46 @@ class PhotoDisplayActivity : AppCompatActivity() {
             .with(this)
             .load(photoUrl)
             .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?, model: Any?, target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    onFinished()
+                override fun onLoadFailed(e: GlideException?, model: Any?,
+                                          target: Target<Drawable>?,
+                                          isFirstResource: Boolean): Boolean {
+                    Log.e(TAG, "Load failed", e);
+                    showRetry()
                     return false
                 }
 
-                override fun onResourceReady(
-                    resource: Drawable?, model: Any?, target: Target<Drawable>?,
-                    dataSource: DataSource?, isFirstResource: Boolean
-                ): Boolean {
-                    onFinished()
+                override fun onResourceReady(resource: Drawable?, model: Any?,
+                                             target: Target<Drawable>?, dataSource: DataSource?,
+                                             isFirstResource: Boolean): Boolean {
+
+                    clearAll()
                     return false
                 }
             })
             .centerInside()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(photoView)
     }
 
-    private fun onFinished() {
+    private fun clearAll() {
         progressbar.visibility = View.GONE
+        retryButton.visibility = View.GONE
+    }
+
+    private fun showProgress() {
+        retryButton.visibility = View.GONE
+        progressbar.visibility = View.VISIBLE
+    }
+
+    private fun showRetry(){
+        progressbar.visibility = View.GONE
+        retryButton.visibility = View.VISIBLE
+    }
+
+    private fun setupRetryListner() {
+        retryButton.setOnClickListener {
+            showProgress()
+            setUpView()
+        }
     }
 }
