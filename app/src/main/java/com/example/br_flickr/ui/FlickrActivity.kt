@@ -32,6 +32,8 @@ class FlickrActivity : AppCompatActivity() {
         InjectorUtils.providePhotoViewModelFactory(this)
     }
 
+    private val KEY_QUERY = "search"
+
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var menuItem: MenuItem
@@ -43,6 +45,8 @@ class FlickrActivity : AppCompatActivity() {
 
         initAdapter()
         initSwipeToRefresh()
+        val searchQuery = savedInstanceState?.getString(KEY_QUERY) ?: FLICKR_DEFAULT_SEARCH
+        fetchSearch(searchQuery)
     }
 
     private val OnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -80,7 +84,7 @@ class FlickrActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = PhotoListAdapter(glide, InjectorUtils.getPhotoRepo(this)) {
+        val adapter = PhotoListAdapter(glide, InjectorUtils.getPhotoDBRepo(this)) {
             viewModel.retry()
         }
         recyclerView = findViewById(R.id.recyclerView)
@@ -119,8 +123,12 @@ class FlickrActivity : AppCompatActivity() {
             )
             setIconifiedByDefault(false) // Do not iconify the widget; expand it by default
         }
-        fetchSearch(FLICKR_DEFAULT_SEARCH)
         return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_QUERY, viewModel.currentSearch())
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -142,7 +150,9 @@ class FlickrActivity : AppCompatActivity() {
     }
 
     private fun fetchSearch(query: String) {
-        menuItem.collapseActionView()
+        if(::menuItem.isInitialized) {
+            menuItem.collapseActionView()
+        }
         if (query.isNotEmpty()) {
             if (viewModel.showSearch(query)) {
                 clearScreen()

@@ -8,7 +8,7 @@ import com.example.br_flickr.ui.PhotoSearchViewModelFactory
 
 object InjectorUtils {
 
-    fun getPhotoRepo(context: Context): FlickrDatabase {
+    fun getPhotoDBRepo(context: Context): FlickrDatabase {
         return FlickrDatabase.getInstance(
             RoomDatabaseFactory.getInstance(context.applicationContext, FLICKR_DATABASE_NAME).posts()
         )
@@ -16,7 +16,7 @@ object InjectorUtils {
 
     fun providePhotoViewModelFactory(context: Context):
             PhotoSearchViewModelFactory {
-        val repository = getPhotoRepo(context)
+        val repository = getPhotoDBRepo(context)
         return PhotoSearchViewModelFactory(repository)
     }
 }

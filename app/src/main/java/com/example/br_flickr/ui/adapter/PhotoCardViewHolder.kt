@@ -16,8 +16,10 @@ import com.bumptech.glide.request.target.Target
 import com.example.br_flickr.model.Photo
 import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDatabase
+import com.example.br_flickr.ui.CustomImageView
 import com.example.br_flickr.ui.PhotoDisplayActivity
 import com.example.br_flickr.util.GlideRequests
+import kotlinx.android.synthetic.main.custom_image_view.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,17 +28,14 @@ import kotlinx.coroutines.launch
 class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDatabase: FlickrDatabase) :
     RecyclerView.ViewHolder(view) {
 
-    private val photoImage = view.findViewById<ImageView>(R.id.photoImage)
     private val title = view.findViewById<TextView>(R.id.title)
     private val bookmark = view.findViewById<ImageButton>(R.id.bookmark)
-    private val progressbar = view.findViewById<ProgressBar>(R.id.spinner)
-    private val retryButton = view.findViewById<Button>(R.id.retry_button)
+    private val customImageView = view.findViewById<CustomImageView>(R.id.custom_image_view)
     private var photo: Photo? = null
 
     private val TAG = "PhotoCardViewHolder"
 
     init {
-        itemView.isClickable = false
         itemView.setOnClickListener {
             val intent = Intent(view.context, PhotoDisplayActivity::class.java).apply {
                 putExtra("photoUrl", photo?.url_m)
@@ -47,8 +46,8 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         bookmark.setOnClickListener {
             setBookmark()
         }
-        retryButton.setOnClickListener {
-            showProgress()
+        customImageView.retryButton.setOnClickListener {
+            customImageView.showProgress()
             bind(photo)
         }
     }
@@ -81,19 +80,19 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
                                           target: Target<Drawable>?,
                                           isFirstResource: Boolean): Boolean {
                     Log.e(TAG, "Load failed", e);
-                    showRetry()
+                    customImageView.showRetry()
                     return false
                 }
                 override fun onResourceReady(resource: Drawable?, model: Any?,
                                              target: Target<Drawable>?, dataSource: DataSource?,
                                              isFirstResource: Boolean): Boolean {
-                    clearAll()
+                    customImageView.clearAll()
                     return false
                 }
             })
             .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(photoImage)
+            .into(customImageView.photoImage)
     }
 
     fun bind(photo: Photo?) {
@@ -112,24 +111,6 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     }
 
     fun updatePhoto(item: Photo?) {
-        bind(photo)
+        bind(item)
     }
-
-    private fun clearAll() {
-        itemView.isClickable = true
-        progressbar.visibility = View.GONE
-        retryButton.visibility = View.GONE
-    }
-
-    private fun showProgress() {
-        retryButton.visibility = View.GONE
-        progressbar.visibility = View.VISIBLE
-    }
-
-    private fun showRetry(){
-        itemView.isClickable = false
-        progressbar.visibility = View.GONE
-        retryButton.visibility = View.VISIBLE
-    }
-
 }

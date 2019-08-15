@@ -18,7 +18,4 @@ interface FlickrDao {
 
     @Query("SELECT * FROM photos WHERE id = :id")
     fun findId(id: String?): Photo?
-
-    @Query("SELECT MAX(indexInResponse) + 1 FROM photos WHERE id = :id")
-    fun getNextIndexInPhoto(id: String): Int
 }

@@ -6,8 +6,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class FlickrDatabase private constructor(
-    private val flickrDao: FlickrDao
-) {
+    private val flickrDao: FlickrDao) {
 
     suspend fun bookmarkPhoto(photo: Photo?) {
         withContext(IO) {

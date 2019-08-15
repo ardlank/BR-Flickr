@@ -19,11 +19,9 @@ import com.example.br_flickr.R
 //Display image View
 class PhotoDisplayActivity : AppCompatActivity() {
 
-    private lateinit var progressbar: ProgressBar
-
-    private lateinit var photoView: ImageView
-
-    private lateinit var retryButton: Button
+    private lateinit var customImageView: CustomImageView
+    private var photoTitle = ""
+    private var photoUrl = ""
 
     private val TAG = "PhotoDisplayActivity"
 
@@ -31,25 +29,29 @@ class PhotoDisplayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.photo_display)
 
-        initComponents()
+        setupCustomView()
+        getPhoto()
         setUpView()
         setupRetryListner()
     }
 
-    private fun initComponents() {
-        photoView = findViewById(R.id.photoImage)
-        progressbar = findViewById(R.id.spinner)
-        retryButton = findViewById(R.id.retry_button)
+    private fun setupCustomView() {
+        customImageView = findViewById(R.id.custom_image_view)
+    }
+
+    private fun getPhoto() {
+        if (intent != null) {
+            photoTitle = intent.extras?.get("photoTitle") as String
+            photoUrl = intent.extras?.get("photoUrl") as String
+        }
     }
 
     private fun setUpView() {
-        if (intent != null) {
-            val photoTitle = intent.extras?.get("photoTitle")
-            val photoUrl = intent.extras?.get("photoUrl")
-            if (photoTitle is String) setImageTitle(photoTitle)
-            if (photoUrl is String) setImage(photoUrl)
+        if(photoTitle.isNotEmpty() && photoUrl.isNotEmpty()) {
+            setImageTitle(photoTitle)
+            setImage(photoUrl)
         } else {
-            showRetry()
+            customImageView.showRetry()
         }
     }
 
@@ -66,7 +68,7 @@ class PhotoDisplayActivity : AppCompatActivity() {
                                           target: Target<Drawable>?,
                                           isFirstResource: Boolean): Boolean {
                     Log.e(TAG, "Load failed", e);
-                    showRetry()
+                    customImageView.showRetry()
                     return false
                 }
 
@@ -74,33 +76,21 @@ class PhotoDisplayActivity : AppCompatActivity() {
                                              target: Target<Drawable>?, dataSource: DataSource?,
                                              isFirstResource: Boolean): Boolean {
 
-                    clearAll()
+                    customImageView.clearAll()
                     return false
                 }
             })
             .centerInside()
             .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(photoView)
-    }
-
-    private fun clearAll() {
-        progressbar.visibility = View.GONE
-        retryButton.visibility = View.GONE
-    }
-
-    private fun showProgress() {
-        retryButton.visibility = View.GONE
-        progressbar.visibility = View.VISIBLE
-    }
-
-    private fun showRetry(){
-        progressbar.visibility = View.GONE
-        retryButton.visibility = View.VISIBLE
+            .into(customImageView.photoImage)
     }
 
     private fun setupRetryListner() {
-        retryButton.setOnClickListener {
-            showProgress()
+        customImageView.retryButton.setOnClickListener {
+            customImageView.showProgress()
+            if(photoTitle.isEmpty() or photoUrl.isEmpty()) {
+                getPhoto()
+            }
             setUpView()
         }
     }
