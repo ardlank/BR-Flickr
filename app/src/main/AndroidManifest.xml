@@ -13,7 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.FlickrActivity"
+        <activity android:name=".ui.PhotoActivity"
                   android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,8 +29,9 @@
         </activity>
 
         <activity android:name=".ui.PhotoDisplayActivity"
-                  android:parentActivityName=".ui.FlickrActivity">
+                  android:parentActivityName=".ui.PhotoActivity">
         </activity>
+
         <provider android:name=".util.MySuggestionProvider"
                   android:authorities="com.example.MySuggestionProvider"/>
     </application>

@@ -23,16 +23,16 @@ import com.example.br_flickr.util.InjectorUtils
 import com.example.br_flickr.util.MySuggestionProvider
 import com.example.br_flickr.util.NetworkState
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.flickr_main.*
+import kotlinx.android.synthetic.main.photo_main.*
 
 
-class FlickrActivity : AppCompatActivity() {
+class PhotoActivity : AppCompatActivity() {
 
-    private val viewModel: PhotoSearchViewModel by viewModels {
+    private val viewModel: PhotoViewModel by viewModels {
         InjectorUtils.providePhotoViewModelFactory(this)
     }
 
-    private val KEY_QUERY = "search"
+    private val keyQuery = "query"
 
     private lateinit var recyclerView: RecyclerView
 
@@ -40,12 +40,12 @@ class FlickrActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.flickr_main)
+        setContentView(R.layout.photo_main)
         navigation.setOnNavigationItemSelectedListener(OnNavigationItemSelectedListener)
 
         initAdapter()
         initSwipeToRefresh()
-        val searchQuery = savedInstanceState?.getString(KEY_QUERY) ?: FLICKR_DEFAULT_SEARCH
+        val searchQuery = savedInstanceState?.getString(keyQuery) ?: FLICKR_DEFAULT_SEARCH
         fetchSearch(searchQuery)
     }
 
@@ -84,7 +84,7 @@ class FlickrActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = PhotoListAdapter(glide, InjectorUtils.getPhotoDBRepo(this)) {
+        val adapter = PhotoListAdapter(glide, InjectorUtils.getFlickrDatabase(this)) {
             viewModel.retry()
         }
         recyclerView = findViewById(R.id.recyclerView)
@@ -128,7 +128,7 @@ class FlickrActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(KEY_QUERY, viewModel.currentSearch())
+        outState.putString(keyQuery, viewModel.currentSearch())
     }
 
     override fun onNewIntent(intent: Intent?) {

@@ -1,4 +1,4 @@
-package com.example.br_flickr.source.remote.flickr
+package com.example.br_flickr.source.remote
 
 import android.util.Log
 import com.example.br_flickr.model.Photo
@@ -14,8 +14,8 @@ import kotlinx.coroutines.*
 
 //A data source that uses the before/after keys returned in page requests. Before is not used
 class FlickrPageKeyedDataSource(
-    private val flickrApi: FlickrApi,
     private val searchQuery: String,
+    private val flickrApi: FlickrApi,
     private val flickrDatabase: FlickrDatabase
 ) : PageKeyedDataSource<Int, Photo>() {
 

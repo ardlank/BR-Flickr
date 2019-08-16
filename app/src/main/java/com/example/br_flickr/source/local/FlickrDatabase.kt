@@ -1,5 +1,6 @@
 package com.example.br_flickr.source.local
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.example.br_flickr.model.Photo
 import kotlinx.coroutines.Dispatchers.IO

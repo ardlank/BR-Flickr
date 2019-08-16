@@ -1,4 +1,4 @@
-package com.example.br_flickr.source.remote.flickr
+package com.example.br_flickr.source.remote
 
 import com.example.br_flickr.model.PhotosResponse
 import com.example.br_flickr.source.SourceConstants
@@ -12,8 +12,9 @@ interface FlickrApi {
     @GET(SourceConstants.FLICKR_SEARCH_ENDPOINT)
     suspend fun search(
         @Query("text") searchQuery: String,
-        @Query("page") page: Int,
-        @Query("per_page") per_page: Int = SourceConstants.FLICKR_PAGE_SIZE,
-        @Query("extras") extras: String = SourceConstants.FLICKR_PHOTO_URLS
+        @Query("page") page: Int?,
+        @Query("per_page") per_page: Int? = SourceConstants.FLICKR_PAGE_SIZE,
+        @Query("extras") extras: String? = SourceConstants.FLICKR_PHOTO_URLS,
+        @Query("sort") sort: String? = SourceConstants.FLICKR_PHOTO_SORT
     ): Response<PhotosResponse>
 }

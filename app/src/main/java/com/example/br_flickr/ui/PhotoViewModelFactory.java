@@ -4,21 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.br_flickr.source.local.FlickrDatabase;
+import com.example.br_flickr.source.remote.FlickrApi;
 
-public class PhotoSearchViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class PhotoViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private static FlickrDatabase flickrDatabase;
+    private static FlickrApi flickApi;
 
-    public PhotoSearchViewModelFactory(@NonNull FlickrDatabase flickrDatabase) {
+    public PhotoViewModelFactory(@NonNull FlickrApi flickrApi, FlickrDatabase flickrDatabase) {
         this.flickrDatabase = flickrDatabase;
+        this.flickApi = flickrApi;
     }
 
     @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(PhotoSearchViewModel.class)) {
-            return (T) new PhotoSearchViewModel(flickrDatabase);
+        if (modelClass.isAssignableFrom(PhotoViewModel.class)) {
+            return (T) new PhotoViewModel(flickApi, flickrDatabase);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
