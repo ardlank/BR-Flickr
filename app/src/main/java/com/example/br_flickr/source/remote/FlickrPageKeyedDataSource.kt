@@ -120,7 +120,7 @@ class FlickrPageKeyedDataSource(
 
     private fun setBookmark(photos: List<Photo>) {
         for (photo in photos) {
-            if (flickrDatabase.photoInRepo(photo?.id) != null) {
+            if (flickrDatabase.photoInRepo(photo.id) != null) {
                 photo.isBookmarked = true
             }
         }

@@ -19,10 +19,10 @@ class PhotoViewModel(flickrApi: FlickrApi,
         PhotoRepo(flickrApi, flickrDatabase)
     private var photoRepoDB: PhotoRepoDB = PhotoRepoDB(flickrDatabase)
 
-    public val currentSearchQuery = MutableLiveData<String>()
+    private val currentSearchQuery = MutableLiveData<String>()
     private val currentRepo = MutableLiveData<FlickrPostSource.Type>()
 
-    public var currentPosts = MediatorLiveData<Posts<Photo>>()
+    private var currentPosts = MediatorLiveData<Posts<Photo>>()
 
     val photos = switchMap(currentPosts) { posts -> posts.pagedList }
     val networkState = switchMap(currentPosts) { posts -> posts.networkState }
