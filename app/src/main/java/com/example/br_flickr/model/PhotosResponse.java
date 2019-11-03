@@ -4,23 +4,23 @@ import java.util.List;
 
 public class PhotosResponse {
 
-    private Photos photos;
+    private PhotoPage photos;
 
-    public Photos getPhotos() {
+    public PhotoPage getPhotos() {
         return photos;
     }
 
-    public void setPhotos(Photos photos) {
+    public void setPhotos(PhotoPage photos) {
         this.photos = photos;
     }
 
-    public static class Photos {
+    public static class PhotoPage {
 
         private int page;
         private int pages;
         private int perpage;
         private String total;
-        private List<Photo> photo;
+        private List<PhotoObject> photo;
 
         public int getPage() {
             return page;
@@ -54,11 +54,11 @@ public class PhotosResponse {
             this.total = total;
         }
 
-        public List<Photo> getPhoto() {
+        public List<PhotoObject> getPhoto() {
             return photo;
         }
 
-        public void setPhoto(List<Photo> photo) {
+        public void setPhoto(List<PhotoObject> photo) {
             this.photo = photo;
         }
     }

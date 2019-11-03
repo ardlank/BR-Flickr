@@ -3,7 +3,7 @@ package com.example.br_flickr.ui
 import androidx.lifecycle.*
 import com.example.br_flickr.source.remote.PhotoRepo
 import androidx.lifecycle.Transformations.switchMap
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import com.example.br_flickr.source.Posts
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.source.local.PhotoRepoDB
@@ -22,7 +22,7 @@ class PhotoViewModel(flickrApi: FlickrApi,
     private val currentSearchQuery = MutableLiveData<String>()
     private val currentRepo = MutableLiveData<FlickrPostSource.Type>()
 
-    private var currentPosts = MediatorLiveData<Posts<Photo>>()
+    private var currentPosts = MediatorLiveData<Posts<PhotoObject>>()
 
     val photos = switchMap(currentPosts) { posts -> posts.pagedList }
     val networkState = switchMap(currentPosts) { posts -> posts.networkState }

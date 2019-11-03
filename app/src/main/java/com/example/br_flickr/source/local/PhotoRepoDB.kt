@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import com.example.br_flickr.source.Posts
 import com.example.br_flickr.source.SourceConstants
 import com.example.br_flickr.source.FlickrPostSource
@@ -18,7 +18,7 @@ class PhotoRepoDB(private val flickrDatabase: FlickrDatabase) : FlickrPostSource
     private val initialLoad = MutableLiveData<NetworkState>()
 
     @MainThread
-    override fun postsOfPhoto(searchQuery: String?): Posts<Photo> {
+    override fun postsOfPhoto(searchQuery: String?): Posts<PhotoObject> {
 
         return Posts(
             pagedList = if(searchQuery == null) getAllRoomPhotos()
@@ -39,13 +39,13 @@ class PhotoRepoDB(private val flickrDatabase: FlickrDatabase) : FlickrPostSource
         initialLoad.value = NetworkState.LOADED
     }
 
-    private fun getAllRoomPhotos(): LiveData<PagedList<Photo>> {
+    private fun getAllRoomPhotos(): LiveData<PagedList<PhotoObject>> {
         return LivePagedListBuilder(flickrDatabase.getAllBookmarks(), SourceConstants.FLICKR_PAGE_SIZE)
             .build()
     }
 
     //Future work: Implement search
-    private fun getQueryRoomPhotos(query: String): LiveData<PagedList<Photo>> {
+    private fun getQueryRoomPhotos(query: String): LiveData<PagedList<PhotoObject>> {
         return LivePagedListBuilder(flickrDatabase.getQueryBookmarks(query), SourceConstants.FLICKR_PAGE_SIZE)
             .build()
     }

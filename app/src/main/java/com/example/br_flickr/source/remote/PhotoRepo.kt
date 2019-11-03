@@ -3,7 +3,7 @@ package com.example.br_flickr.source.remote
 import androidx.annotation.MainThread
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import androidx.paging.PagedList
 import com.example.br_flickr.source.SourceConstants
 import com.example.br_flickr.source.Posts
@@ -17,7 +17,7 @@ class PhotoRepo(private val flickrApi: FlickrApi,
                 private val flickrDatabase: FlickrDatabase) : FlickrPostSource {
 
     @MainThread
-    override fun postsOfPhoto(searchQuery: String?): Posts<Photo> {
+    override fun postsOfPhoto(searchQuery: String?): Posts<PhotoObject> {
         if(searchQuery is String) {
             val sourceFactory =
                 FlickrDataSourceFactory(searchQuery, flickrApi, flickrDatabase)

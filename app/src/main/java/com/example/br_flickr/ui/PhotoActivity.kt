@@ -15,7 +15,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.br_flickr.R
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import com.example.br_flickr.source.SourceConstants.FLICKR_DEFAULT_SEARCH
 import com.example.br_flickr.ui.adapter.PhotoListAdapter
 import com.example.br_flickr.util.GlideApp
@@ -90,7 +90,7 @@ class PhotoActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
 
         recyclerView.adapter = adapter
-        viewModel.photos.observe(this, Observer<PagedList<Photo>> { posts ->
+        viewModel.photos.observe(this, Observer<PagedList<PhotoObject>> { posts ->
             adapter.submitList(posts)
         })
         viewModel.networkState.observe(this, Observer { networkState ->

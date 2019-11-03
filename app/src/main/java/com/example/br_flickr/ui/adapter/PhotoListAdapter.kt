@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.util.GlideRequests
@@ -16,7 +16,7 @@ class PhotoListAdapter(
     private val flickrDatabase: FlickrDatabase,
     private val retryCallback: () -> Unit
 ) :
-    PagedListAdapter<Photo, RecyclerView.ViewHolder>(POST_COMPARATOR) {
+    PagedListAdapter<PhotoObject, RecyclerView.ViewHolder>(POST_COMPARATOR) {
 
     private var networkState: NetworkState? = null
 
@@ -83,11 +83,11 @@ class PhotoListAdapter(
     }
 
     companion object {
-        val POST_COMPARATOR = object : DiffUtil.ItemCallback<Photo>() {
-            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+        val POST_COMPARATOR = object : DiffUtil.ItemCallback<PhotoObject>() {
+            override fun areContentsTheSame(oldItem: PhotoObject, newItem: PhotoObject): Boolean =
                 oldItem == newItem
 
-            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+            override fun areItemsTheSame(oldItem: PhotoObject, newItem: PhotoObject): Boolean =
                 oldItem.id == newItem.id
         }
     }

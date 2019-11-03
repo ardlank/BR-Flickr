@@ -1,7 +1,7 @@
 package com.example.br_flickr.source.remote
 
 import android.util.Log
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.br_flickr.source.SourceConstants
@@ -17,7 +17,7 @@ class FlickrPageKeyedDataSource(
     private val searchQuery: String,
     private val flickrApi: FlickrApi,
     private val flickrDatabase: FlickrDatabase
-) : PageKeyedDataSource<Int, Photo>() {
+) : PageKeyedDataSource<Int, PhotoObject>() {
 
     private val TAG = "FlickrPageKeyedSource"
 
@@ -36,9 +36,9 @@ class FlickrPageKeyedDataSource(
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Photo>) {}
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, PhotoObject>) {}
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Photo>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, PhotoObject>) {
         networkState.postValue(LOADING)
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -72,7 +72,7 @@ class FlickrPageKeyedDataSource(
         }
     }
 
-    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Photo>) {
+    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, PhotoObject>) {
         networkState.postValue(LOADING)
         initialLoad.postValue(LOADING)
 
@@ -118,7 +118,7 @@ class FlickrPageKeyedDataSource(
         }
     }
 
-    private fun setBookmark(photos: List<Photo>) {
+    private fun setBookmark(photos: List<PhotoObject>) {
         for (photo in photos) {
             if (flickrDatabase.photoInRepo(photo.id) != null) {
                 photo.isBookmarked = true

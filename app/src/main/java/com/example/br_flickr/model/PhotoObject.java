@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName="photos", indices = {@Index(value = {"id"},
         unique = true)})
-public class Photo {
+public class PhotoObject {
     @NonNull
     @PrimaryKey
     private String id;
@@ -152,11 +152,11 @@ public class Photo {
             return true;
         }
 
-        if (!(o instanceof Photo)) {
+        if (!(o instanceof PhotoObject)) {
             return false;
         }
 
-        Photo photo = (Photo) o;
-        return photo.id.equals(id) && photo.title.equals(title);
+        PhotoObject photoObject = (PhotoObject) o;
+        return photoObject.id.equals(id) && photoObject.title.equals(title);
     }
 }

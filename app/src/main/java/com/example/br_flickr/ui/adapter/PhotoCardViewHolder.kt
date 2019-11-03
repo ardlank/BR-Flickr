@@ -13,25 +13,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import com.example.br_flickr.R
 import com.example.br_flickr.source.local.FlickrDatabase
 import com.example.br_flickr.ui.CustomImageView
 import com.example.br_flickr.ui.PhotoDisplayActivity
 import com.example.br_flickr.util.GlideRequests
-import kotlinx.android.synthetic.main.custom_image_view.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//RecyclerView ViewHolder for a Photo Card
+//RecyclerView ViewHolder for a PhotoObject Card
 class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private val flickrDatabase: FlickrDatabase) :
     RecyclerView.ViewHolder(view) {
 
     private val title = view.findViewById<TextView>(R.id.title)
     private val bookmark = view.findViewById<ImageButton>(R.id.bookmark)
     private val customImageView = view.findViewById<CustomImageView>(R.id.custom_image_view)
-    private var photo: Photo? = null
+    private var photo: PhotoObject? = null
 
     private val TAG = "PhotoCardViewHolder"
 
@@ -95,7 +94,7 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
             .into(customImageView.photoImage)
     }
 
-    fun bind(photo: Photo?) {
+    fun bind(photo: PhotoObject?) {
         this.photo = photo
         setBookmarkIcon()
         title.text = photo?.title ?: "loading"
@@ -110,7 +109,7 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
         }
     }
 
-    fun updatePhoto(item: Photo?) {
+    fun updatePhoto(item: PhotoObject?) {
         bind(item)
     }
 }

@@ -4,11 +4,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 
 //Database schema used by the PhotoRepoDB
 @Database(
-    entities = [Photo::class],
+    entities = [PhotoObject::class],
     version = 1,
     exportSchema = false
 )

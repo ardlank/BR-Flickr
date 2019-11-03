@@ -1,21 +1,20 @@
 package com.example.br_flickr.source.local
 
-import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
-import com.example.br_flickr.model.Photo
+import com.example.br_flickr.model.PhotoObject
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class FlickrDatabase private constructor(
     private val flickrDao: FlickrDao) {
 
-    suspend fun bookmarkPhoto(photo: Photo?) {
+    suspend fun bookmarkPhoto(photo: PhotoObject?) {
         withContext(IO) {
             flickrDao.insert(photo)
         }
     }
 
-    suspend fun removeBookmark(photo: Photo?) {
+    suspend fun removeBookmark(photo: PhotoObject?) {
         withContext(IO) {
             flickrDao.delete(photo)
         }
@@ -23,12 +22,12 @@ class FlickrDatabase private constructor(
 
     fun photoInRepo(id: String?) = flickrDao.findId(id)
 
-    fun getAllBookmarks(): DataSource.Factory<Int, Photo> {
+    fun getAllBookmarks(): DataSource.Factory<Int, PhotoObject> {
         return flickrDao.allBookmarkPosts()
     }
 
     //Future work: Implement search
-    fun getQueryBookmarks(query: String): DataSource.Factory<Int, Photo> {
+    fun getQueryBookmarks(query: String): DataSource.Factory<Int, PhotoObject> {
         return flickrDao.allBookmarkPosts()
     }
 
