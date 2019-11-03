@@ -37,7 +37,8 @@ class PhotoCardViewHolder(view: View, private val glide: GlideRequests, private 
     init {
         itemView.setOnClickListener {
             val intent = Intent(view.context, PhotoDisplayActivity::class.java).apply {
-                putExtra("photoUrl", photo?.url_m)
+                val photoUrl = photo?.url_m ?: photo?.url_o
+                putExtra("photoUrl", photoUrl)
                 putExtra("photoTitle", photo?.title)
             }
             view.context.startActivity(intent)
